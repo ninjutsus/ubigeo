@@ -5,6 +5,7 @@
 	python manage.py migrate
 	python manage.py makemigrations core
 	python manage.py migrate core
+	python manage.py upload_data
 	python manage.py runserver
 
 
