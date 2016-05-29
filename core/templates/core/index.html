@@ -1,0 +1,107 @@
+<html>
+<head>
+	<title>test api</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+</head>
+<body>
+	<!--<div class="combo">
+		<select class="validate[required]" id="combo_pais" name="pais">
+			<option value="">País</option>
+			<option value="peru" selected="selected">Perú</option>
+		</select>
+	</div>-->
+	<div class="combo">
+		<select class="validate[required] combo_departamento" id="combo_departamento" name="departamento">
+			<option value="" selected="selected">Departamento</option>
+			<option value="1" >Apurimac</option>
+		</select>
+	</div>
+	<div class="combo ">
+		<select class="validate[required] combo_provincia" id="combo_provincia" name="provincia">
+			<option value="" selected="selected">Provincia</option>
+		</select>
+	</div>
+	<div class="combo ">
+		<select class="validate[required] combo_distrito" id="combo_distrito" name="distrito">
+			<option value="" selected="selected">Distrito</option>
+		</select>
+	</div>
+</body>
+<script type="text/javascript">
+	actualizar_combo_departamento();
+	function actualizar_combo_departamento() {
+		$.getJSON('/api/departamentos/', function(data) {
+        	console.log(data);
+            $.each(data, function(index, departamento){
+            $('<option value="' + departamento['id'] + '">' +
+            departamento['nombre'] + '</option>').appendTo('.combo_departamento');
+        });
+        });
+    }
+	
+    $('.combo').on('change', '.combo_departamento', function() {
+    	console.log("cambio departamento");
+        var departamento_id = $(this).val();
+        console.log(departamento_id);
+        if(departamento_id) {
+            actualizar_provincia(departamento_id);
+        } else {
+            clean_combo_provincia();
+            clean_combo_distrito();
+        }
+    });
+
+    $('.combo').on('change', '.combo_provincia', function() {
+        var provincia_id = $(this).val();
+
+        if(provincia_id) {
+            actualizar_distrito(provincia_id);
+        } else {
+            clean_combo_distrito();
+        }
+    });
+
+    function clean_combo_provincia() {
+        $('.combo_provincia').empty();
+        $('<option value="">Provincia</option>').appendTo('.combo_provincia');
+    }
+
+    function clean_combo_distrito() {
+        $('.combo_distrito').empty();
+        $('<option value="">Distrito</option>').appendTo('.combo_distrito');
+    }
+
+    function actualizar_combo_provincia(data) {
+        clean_combo_provincia();
+
+        $.each(data, function(index, provincia){
+            $('<option value="' + provincia['id'] + '">' +
+            provincia['nombre'] + '</option>').appendTo('.combo_provincia');
+        });
+
+        clean_combo_distrito();
+    }
+
+    function actualizar_provincia(departamento_id) {
+        $.getJSON('/api/provincias/' + departamento_id, function(data) {
+        	console.log(data);
+            actualizar_combo_provincia(data);
+        });
+    }
+
+    function actualizar_combo_distrito(data) {
+        clean_combo_distrito();
+
+        $.each(data, function(index, distrito) {
+            $('<option value="' + distrito['id'] + '">' +
+            distrito['nombre'] + '</option>').appendTo('.combo_distrito')
+        });
+    }
+
+    function actualizar_distrito(provincia_id) {
+        $.getJSON('/api/distritos/' + provincia_id, function(data) {
+            actualizar_combo_distrito(data);
+        });
+    }
+</script>
+</html>
