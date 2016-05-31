@@ -5,6 +5,7 @@ from .models import Provincia
 
 from .serializers import DepartametnoSerializer
 from .serializers import ProvinciaSerializer
+from .serializers import DistritoSerializer
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -24,5 +25,15 @@ def api_provincias(request, pk):
     departamento = Departamento.objects.get(pk=pk)
     provincias = departamento.provincias.all()
     serializer = ProvinciaSerializer(provincias, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET', ])
+def api_distritos(request, pk):
+    """
+    pk: pk de provincia
+    """
+    provincia = Provincia.objects.get(pk=pk)
+    distritos = provincia.distritos.all()
+    serializer = DistritoSerializer(distritos, many=True)
     return Response(serializer.data)
 
