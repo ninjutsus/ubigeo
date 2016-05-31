@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # self.conteo()
-        print data
+        print (data)
         pais, created = Pais.objects.get_or_create(nombre="PERÚ", codigo="PE")
 
         for x in data:
